@@ -25,12 +25,7 @@ class SiteController extends Controller
     public function services() {
 
 
-        $title = 'Our services';
-        $paragraph = 'Lorem ipsum';
-
-        $data = Service::all();
-
-        return view('services', [ 'myServices' => $data, 'title' => $title, 'paragraph' => $paragraph ]);
+       
     }
 
     public function contact() {
@@ -42,12 +37,5 @@ class SiteController extends Controller
     }
 
 
-    public function show(Service $service) {
-
-        $title = 'Show page';
-        $paragraph = 'Lorem ipsum';
-
-        return view('show', ['service' => $service, 'title' => $title, 'paragraph' => $paragraph]);
-
-    }
+   
 }

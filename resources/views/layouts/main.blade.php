@@ -10,10 +10,9 @@
 </head>
 <body>
 
-<a href="/">Home</a> 
-<a href="/services">Services</a> 
-<a href="/about">About</a> 
-<a href="/contact">Contact</a>
+@include('partials.nav')
+
+@include('partials.info')
     
 <div class="container">
     @yield('content')
