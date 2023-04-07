@@ -11,6 +11,12 @@
                 <a class="nav-link" href="{{ route('service.index') }}">Services</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="{{ route('categories.index') }}">Categories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('articles.index') }}">Blog</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{{ route('site.about') }}">About</a>
             </li>
             <li class="nav-item">
