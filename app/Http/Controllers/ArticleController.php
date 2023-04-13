@@ -2,13 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
+
 use App\Models\Article;
 use App\Models\Category;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only('edit', 'update');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -17,8 +25,9 @@ class ArticleController extends Controller
         $title = "List of articles";
         $paragraph = "Welcome to our Blog PMP";
 
-        $articles = Article::paginate(5);
+        $articles = Article::all();
         $categories = Category::take(6)->get();
+
         return view('article.index', [
             'articles' => $articles, 
             'categories' => $categories,
@@ -32,7 +41,14 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create', Article::class);
+
+        $title = "List of articles";
+        $paragraph = "Welcome to our Blog PMP";
+
+        $categories = Category::all();
+
+        return view("article.create", ['title' => $title, 'paragraph' => $paragraph, 'categories' => $categories]);
     }
 
     /**
@@ -40,7 +56,20 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        //
+        $this->authorize('create', Article::class);
+
+        $article = new Article();
+
+        $article->title = $request->title;
+        $article->slug = Str::slug($request->title, '-');
+        $article->image = $request->url;
+        $article->content = $request->content;
+        $article->category_id = $request->category_id;
+        $article->user_id = Auth::id();
+
+        $article->save();
+
+        return to_route('articles.index')->with('status', 'Article is created successfully !');
     }
 
     /**
@@ -48,6 +77,8 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
+        $this->authorize('view', $article);
+
         $title = "PMP Blog";
         $paragraph = "Welcome to our Blog PMP";
 
@@ -65,7 +96,14 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        //
+        $this->authorize('update', $article); 
+
+        $title = "Edit article";
+        $paragraph = "Welcome to our Blog PMP";
+
+        $categories = Category::all();
+
+        return view("article.edit", ['title' => $title, 'paragraph' => $paragraph, 'categories' => $categories, 'article' => $article]);
     }
 
     /**
@@ -73,7 +111,18 @@ class ArticleController extends Controller
      */
     public function update(UpdateArticleRequest $request, Article $article)
     {
-        //
+        $this->authorize('update', $article);
+        
+        $article->title = $request->title;
+        $article->slug = Str::slug($request->title, '-');
+        $article->image = $request->url;
+        $article->content = $request->content;
+        $article->category_id = $request->category_id;
+        $article->user_id = Auth::id();
+
+        $article->save();
+
+        return to_route('articles.index')->with('status', 'Article is updated successfully !');
     }
 
     /**

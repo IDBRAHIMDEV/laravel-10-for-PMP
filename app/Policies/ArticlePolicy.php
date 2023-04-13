@@ -8,12 +8,22 @@ use Illuminate\Auth\Access\Response;
 
 class ArticlePolicy
 {
+
+    public function before(User $user, $ability): bool|null {
+
+        if($user->role == "Admin") {
+            return true;
+        }
+
+        return null;
+    }
+
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -21,7 +31,7 @@ class ArticlePolicy
      */
     public function view(User $user, Article $article): bool
     {
-        //
+        return $user->role == 'Editor' || $user->id == $article->user_id;
     }
 
     /**
@@ -29,7 +39,7 @@ class ArticlePolicy
      */
     public function create(User $user): bool
     {
-        //
+        return $user->role == "Creator";
     }
 
     /**
@@ -37,7 +47,7 @@ class ArticlePolicy
      */
     public function update(User $user, Article $article): bool
     {
-        //
+        return $user->role == 'Editor' || $user->id == $article->user_id;
     }
 
     /**
@@ -45,7 +55,7 @@ class ArticlePolicy
      */
     public function delete(User $user, Article $article): bool
     {
-        //
+        return false;
     }
 
     /**
@@ -53,7 +63,7 @@ class ArticlePolicy
      */
     public function restore(User $user, Article $article): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -61,6 +71,6 @@ class ArticlePolicy
      */
     public function forceDelete(User $user, Article $article): bool
     {
-        //
+        return true;
     }
 }
